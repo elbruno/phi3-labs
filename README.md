@@ -20,8 +20,8 @@ Before running the sample, ensure you have the following installed:
     cd c:\phi3\models
     git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
     ```
-Important: The current demos are designed to use the ONNX versions of the model. Clone the following modes. Currently there is no ONNX version available for the **Phi-3-vision-128k-instruct** model 
- ![Download only ONNX models](./img/10DownloadOnnx.png)
+    ***Important:** The current demos are designed to use the ONNX versions of the model. Clone the following modes. Currently there is no ONNX version available for the **Phi-3-vision-128k-instruct** model.*
+    ![Download only ONNX models](./img/10DownloadOnnx.png)
 
 
 ## About the Samples
@@ -51,7 +51,7 @@ To run the project, follow these steps:
 
 1.  The sample project ask for a user input and replies using the local mode. The running demo is similar to this one:
 
-    ![Chat running demo](/imgs/20chatdemo.gif)
+    ![Chat running demo](./img/20SampleConsole.gif)
 
 
 
@@ -68,7 +68,7 @@ To run the project, follow these steps:
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check [issues page](https://github.com/elbruno/gpt4ol-sk-csharp//issues).
+Feel free to check [issues page](https://github.com/elbruno/phi3-labs//issues).
 
 ## Show your support
 
