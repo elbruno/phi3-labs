@@ -31,7 +31,7 @@ The main solution have several sample projects that demonstrates the capabilitie
 | Project Name | Description | Location |
 | ------------ | ----------- | -------- |
 | LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question | .\src\LabsPhi301\ |
-| LabsPhi302    | This is a sample project to create a coherent chat history using the local model. | .\src\LabsPhi302\ |
+| LabsPhi302    | This is a sample project that implement a chat using Semantic Kernel | .\src\LabsPhi302\ |
 
 
 ## How to Run the Project
