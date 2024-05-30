@@ -28,10 +28,11 @@ Before running the sample, ensure you have the following installed:
 
 The main solution have several sample projects that demonstrates the capabilities of the Phi-3 models.
 
-| Project Name | Description | Location |
+| Project | Description | Location |
 | ------------ | ----------- | -------- |
-| LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question | .\src\LabsPhi301\ |
-| LabsPhi302    | This is a sample project that implement a chat using Semantic Kernel | .\src\LabsPhi302\ |
+| LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question. The project load a local ONNX Phi-3 model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi301\ |
+| LabsPhi302    | This is a sample project that implement a Console chat using Semantic Kernel. | .\src\LabsPhi302\ |
+| *LabsPhi303 (Comming soon!)*   | This is a sample project that uses Phi-3 Vision to analyze images. | .\src\LabsPhi303\ |
 
 
 ## How to Run the Project
@@ -49,9 +50,13 @@ To run the project, follow these steps:
     dotnet run
     ```
 
-1.  The sample project ask for a user input and replies using the local mode. The running demo is similar to this one:
+1.  The sample project ask for a user input and replies using the local mode. 
+
+    The running demo is similar to this one:
 
     ![Chat running demo](./img/20SampleConsole.gif)
+
+    ***Note:** there is a typo in the 1st question, Phi-3 is cool enough to share the correct answer!*
 
 
 
