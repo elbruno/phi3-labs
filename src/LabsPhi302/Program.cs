@@ -1,41 +1,42 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using System.Text.Json;
 
-var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+
+var systemPrompt = "You are an AI assistant that helps people find information. Answer questions using a direct style. Do not share more information that the requested by the users.";
+var userQuestion = "What is the capital of France?";
+var assistantResponse = "The capital of France is Paris.";
+
+var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
+
+// create kernel
 var builder = Kernel.CreateBuilder();
-builder.AddAzureOpenAIChatCompletion(
-    config["AZURE_OPENAI_MODEL"],
-    config["AZURE_OPENAI_ENDPOINT"],
-    config["AZURE_OPENAI_APIKEY"]);
-
+builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
 var kernel = builder.Build();
 
+// create chat
 var chat = kernel.GetRequiredService<IChatCompletionService>();
-
-
-var systemPrompt = "You are an AI assistant that helps people find information.";
-
 var history = new ChatHistory();
-history.AddSystemMessage(systemPrompt);
 
-var  userQ = "What is the capital of France?";
-history.AddUserMessage(userQ);
+// run chat
+while (true)
+{
+    Console.Write("Q: ");
+    var userQ = Console.ReadLine();
+    if (string.IsNullOrEmpty(userQ))
+    {
+        break;
+    }
+    history.AddUserMessage(userQ);
 
-
-var result = await chat.
-
-
-
-// deserialize the object history to JSON format
-var json = JsonSerializer.Serialize(history);
-Console.WriteLine(json);
-
-
-var response = "The capital of France is Paris.";
-history.AddAssistantMessage(response);
-
-json = JsonSerializer.Serialize(history);
-Console.WriteLine(json);
+    Console.Write($"Phi3: ");
+    var response = "";
+    var result = chat.GetStreamingChatMessageContentsAsync(history);
+    await foreach (var message in result)
+    {
+        Console.Write(message.Content);
+        response += message.Content;
+    }
+    history.AddAssistantMessage(response);
+    Console.WriteLine("");
+}
