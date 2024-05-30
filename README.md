@@ -20,14 +20,9 @@ Before running the sample, ensure you have the following installed:
     cd c:\phi3\models
     git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
     ```
+Important: The current demos are designed to use the ONNX versions of the model. Clone the following modes. Currently there is no ONNX version available for the **Phi-3-vision-128k-instruct** model 
+ ![Download only ONNX models](./img/10DownloadOnnx.png)
 
-    Download the **Phi-3-vision-128k-instruct** model to your local machine:
-    ```bash
-    # navigate to the folder to store the models
-    # download phi3-mini-4k-instruct-onnx
-    cd c:\phi3\models
-    git clone https://huggingface.co/microsoft/Phi-3-vision-128k-instruct
-    ```
 
 ## About the Samples
 
@@ -35,8 +30,8 @@ The main solution have several sample projects that demonstrates the capabilitie
 
 | Project Name | Description | Location |
 | ------------ | ----------- | -------- |
-| LabsPhi3Vision01    | This is a sample project that uses a local phi3 model to ask a question | .\src\LabsPhi3Vision01\ |
-| LabsPhi3Vision02    | This is a sample project 1 description. | .\src\LabsPhi3Vision02\ |
+| LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question | .\src\LabsPhi301\ |
+| LabsPhi302    | This is a sample project to create a coherent chat history using the local model. | .\src\LabsPhi302\ |
 
 
 ## How to Run the Project
@@ -46,7 +41,7 @@ To run the project, follow these steps:
 
 1. Open a terminal and navigate to the desired project. 
     ```bash
-    cd .\src\LabsPhi3Vision01\
+    cd .\src\LabsPhi301\
     ```
 
 1. Run the project with the command
@@ -56,7 +51,7 @@ To run the project, follow these steps:
 
 1.  The sample project ask for a user input and replies using the local mode. The running demo is similar to this one:
 
-    ![Ultra running mug](/imgs/ultrarunningmug.png)
+    ![Chat running demo](/imgs/20chatdemo.gif)
 
 
 
