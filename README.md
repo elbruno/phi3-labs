@@ -11,7 +11,7 @@ Welcome to the Phi-3 samples using C#. This repository contains a set of demo pr
 Before running the sample, ensure you have the following installed:
 - **.NET 8**: Make sure you have the latest version of .NET installed on your machine.
 - **(Optional) Visual Studio or Visual Studio Code**: You will need an IDE or code editor capable of running .NET projects. Visual Studio or Visual Studio Code are recommended.
-- Using git, clone locally one of the available Phi-3 versions. 
+- Using git, clone locally one of the available Phi-3 versions from Hugging Face. 
 
     Download the **phi3-mini-4k-instruct-onnx** model to your local machine:
     ```bash
@@ -23,6 +23,7 @@ Before running the sample, ensure you have the following installed:
     ***Important:** The current demos are designed to use the ONNX versions of the model. Clone the following modes. Currently there is no ONNX version available for the **Phi-3-vision-128k-instruct** model.*
     ![Download only ONNX models](./img/10DownloadOnnx.png)
 
+You can learn more about [Phi-3 in Hugging Face](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx).
 
 ## About the Samples
 
