@@ -18,6 +18,9 @@ Before running the sample, ensure you have the following installed:
     # navigate to the folder to store the models
     # download phi3-mini-4k-instruct-onnx
     cd c:\phi3\models
+
+    git lfs install 
+
     git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
     ```
     ***Important:** The current demos are designed to use the ONNX versions of the model. Clone the following modes. Currently there is no ONNX version available for the **Phi-3-vision-128k-instruct** model.*
