@@ -7,8 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Onnx" Version="1.13.0-alpha" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.18.0" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI" Version="0.3.0-rc2" />
+		<PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI.Cuda" Version="0.3.0-rc2" />
+	</ItemGroup>
 
 </Project>
