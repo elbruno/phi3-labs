@@ -41,15 +41,15 @@ The main solution have several sample projects that demonstrates the capabilitie
 | LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question. The project load a local ONNX Phi-3 model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi301\ |
 | LabsPhi302    | This is a sample project that implement a Console chat using Semantic Kernel. | .\src\LabsPhi302\ |
 | LabsPhi303 | This is a sample project that uses a local phi3 vision model to analyze images.. The project load a local ONNX Phi-3 Vision model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi303\ |
-| *LabsPhi304 (Comming soon!)*   | This is a sample project that uses Phi-3 Vision to analyze images. | .\src\LabsPhi304\ |
+| LabsPhi304 | This is a sample project that uses a local phi3 vision model to analyze images.. The project load a local ONNX Phi-3 Vision model using the `Microsoft.ML.OnnxRuntime` libraries. The project also presents a menu with different options to interacti with the user. | .\src\LabsPhi304\ |
 
 
-## How to Run the Project
+## How to Run the Projects
 
-To run the project, follow these steps:
+To run the projects, follow these steps:
 1. Clone the repository to your local machine.
 
-1. Open a terminal and navigate to the desired project. 
+1. Open a terminal and navigate to the desired project. In example, let's run `LabsPhi301`.
     ```bash
     cd .\src\LabsPhi301\
     ```
@@ -67,7 +67,12 @@ To run the project, follow these steps:
 
     ***Note:** there is a typo in the 1st question, Phi-3 is cool enough to share the correct answer!*
 
+1.  The project `LabsPhi304` ask for the user to select different options, and then process the request. In example, analyzing a local image.
 
+    The running demo is similar to this one:
+
+    ![Image Analysis running demo](./img/30SampleVisionConsole.gif)
+    
 
 ## Author
 

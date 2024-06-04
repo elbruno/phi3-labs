@@ -77,6 +77,11 @@ void AnalizeImage(string imagePath)
     // display text with the image path
     SpectreConsoleOutput.DisplayFilePath("Analizing image", imagePath);
 
+    // Display the image thumbnail
+    var image = new CanvasImage(imagePath);
+    image.MaxWidth(16);
+    AnsiConsole.Write(image);
+
     StringBuilder phiResponse = new StringBuilder();
 
     AnsiConsole.Status()
