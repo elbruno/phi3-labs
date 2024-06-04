@@ -36,7 +36,8 @@ The main solution have several sample projects that demonstrates the capabilitie
 | ------------ | ----------- | -------- |
 | LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question. The project load a local ONNX Phi-3 model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi301\ |
 | LabsPhi302    | This is a sample project that implement a Console chat using Semantic Kernel. | .\src\LabsPhi302\ |
-| *LabsPhi303 (Comming soon!)*   | This is a sample project that uses Phi-3 Vision to analyze images. | .\src\LabsPhi303\ |
+| LabsPhi303 | This is a sample project that uses a local phi3 vision model to analyze images.. The project load a local ONNX Phi-3 Vision model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi303\ |
+| *LabsPhi304 (Comming soon!)*   | This is a sample project that uses Phi-3 Vision to analyze images. | .\src\LabsPhi304\ |
 
 
 ## How to Run the Project
