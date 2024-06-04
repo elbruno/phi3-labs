@@ -13,4 +13,22 @@
 		<PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI.Cuda" Version="0.3.0-rc2" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="imgs\foggyday.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="imgs\foggyday.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="imgs\petsmusic.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="imgs\petsmusic.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="imgs\ultrarunningmug.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

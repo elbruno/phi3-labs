@@ -1,36 +1,40 @@
-﻿using System;
-using System.Reflection.Emit;
-using System.Reflection;
-using Microsoft.ML.OnnxRuntimeGenAI;
+﻿using Microsoft.ML.OnnxRuntimeGenAI;
 
-
+// path for model and images
 var modelPath = @"d:\phi3\models\Phi-3-vision-128k-instruct-onnx-cpu\cpu-int4-rtn-block-32-acc-level-4";
-var model = new Model(modelPath);
-var tokenizer = new Tokenizer(model);
 
+var foggyDayImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "foggyday.png");
+var petsMusicImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "petsmusic.png");
+var img = Images.Load(petsMusicImagePath);
+
+// define prompts
 var systemPrompt = "You are an AI assistant that helps people find information. Answer questions using a direct style. Do not share more information that the requested by the users.";
+string userPrompt = "Describe the image, and return the string 'STOP' at the end.";
+var fullPrompt = $"<|system|>{systemPrompt}<|end|><|user|><|image_1|>{userPrompt}<|end|><|assistant|>";
 
-var imageUrl = @"https://github.com/elbruno/gpt4ol-sk-csharp/blob/main/imgs/rpi5.png?raw=true";
-var describeImageQuestion = " ";
+// load model and create processor
+using Model model = new Model(modelPath);
+using MultiModalProcessor processor = new MultiModalProcessor(model);
+using var tokenizerStream = processor.CreateStream();
 
-// show phi3 response
-Console.Write("Phi3: ");
-var fullPrompt = $"<|system|>{systemPrompt}<|end|><|user|>{describeImageQuestion}<|end|><|assistant|>";
-var tokens = tokenizer.Encode(fullPrompt);
+// create the input tensor with the prompt and image
+Console.WriteLine("Full Prompt: " + fullPrompt);
+Console.WriteLine("Start processing image and prompt ...");
+var inputTensors = processor.ProcessImages(fullPrompt, img);
+using GeneratorParams generatorParams = new GeneratorParams(model);
+generatorParams.SetSearchOption("max_length", 3072);
+generatorParams.SetInputs(inputTensors);
 
-var generatorParams = new GeneratorParams(model);
-generatorParams.SetSearchOption("max_length", 2048);
-generatorParams.SetSearchOption("past_present_share_buffer", false);
-generatorParams.SetInputSequences(tokens);
-
-var generator = new Generator(model, generatorParams);
+// generate response
+Console.WriteLine("Generating response ...");
+using var generator = new Generator(model, generatorParams);
 while (!generator.IsDone())
 {
     generator.ComputeLogits();
     generator.GenerateNextToken();
-    var outputTokens = generator.GetSequence(0);
-    var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
-    var output = tokenizer.Decode(newToken);
-    Console.Write(output);
+    var seq = generator.GetSequence(0)[^1];
+    Console.Write(tokenizerStream.Decode(seq));
 }
-Console.WriteLine();
+
+Console.WriteLine("");
+Console.WriteLine("Done!");

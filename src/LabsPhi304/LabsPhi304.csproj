@@ -17,4 +17,18 @@
 		<PackageReference Include="Microsoft.SemanticKernel" Version="1.13.0" />
 		<PackageReference Include="Microsoft.SemanticKernel.Connectors.Onnx" Version="1.13.0-alpha" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="imgs\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="imgs\foggyday.jpg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="imgs\petsmusic.jpg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="imgs\ultrarunningmug.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>
