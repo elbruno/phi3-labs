@@ -24,13 +24,31 @@ public static class SpectreConsoleOutput
 
     public static void DisplayQuestion(string question)
     {
-        AnsiConsole.MarkupLine($"[bold]>>Q: {question}[/]");
+        AnsiConsole.MarkupLine($"[bold][blue]>>Q: {question}[/][/]");
         AnsiConsole.MarkupLine($"");
     }
     public static void DisplayAnswerStart(string answerPrefix)
     {
-        AnsiConsole.Markup($"[bold]>>{answerPrefix}:[/]");
+        AnsiConsole.Markup($"[bold][blue]>> {answerPrefix}:[/][/]");
     }
+
+    public static void DisplayFilePath(string prefix, string filePath)
+    {
+        var path = new TextPath(filePath);
+
+        AnsiConsole.Markup($"[bold][blue]>> {prefix}: [/][/]");
+        AnsiConsole.Write(path);
+        AnsiConsole.MarkupLine($"");
+    }
+
+    public static void DisplaySubtitle(string prefix, string content)
+    {
+        AnsiConsole.Markup($"[bold][blue]>> {prefix}: [/][/]");
+        AnsiConsole.WriteLine(content);
+        AnsiConsole.MarkupLine($"");
+    }
+
+
 
     public static int AskForNumber(string question)
     {
@@ -57,7 +75,7 @@ public static class SpectreConsoleOutput
                     "[grey](Press [blue]<space>[/] to toggle a scenario, " +
                     "[green]<enter>[/] to accept)[/]")
                 .AddChoiceGroup("Select an image to be analuyzed", new[]
-                    {"foggyday.png","petsmusic.png","ultrarunningmug.png",
+                    {"foggyday.png","foggydaysmall.png","petsmusic.png","ultrarunningmug.png",
                     })
                 .AddChoices( new[] { 
                     "Type the image path to be analyzed",
