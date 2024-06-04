@@ -13,17 +13,21 @@ Before running the sample, ensure you have the following installed:
 - **(Optional) Visual Studio or Visual Studio Code**: You will need an IDE or code editor capable of running .NET projects. Visual Studio or Visual Studio Code are recommended.
 - Using git, clone locally one of the available Phi-3 versions from Hugging Face. 
 
-    Download the **phi3-mini-4k-instruct-onnx** model to your local machine:
+- Download the **phi3-mini-4k-instruct-onnx** model to your local machine:
     ```bash
     # navigate to the folder to store the models
-    # download phi3-mini-4k-instruct-onnx
     cd c:\phi3\models
 
+    # add support for lfs
     git lfs install 
 
+    # clone and download mini 4K instruct model
     git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
+
+    # clone and download vision 128K model
+    git clone https://huggingface.co/microsoft/Phi-3-vision-128k-instruct-onnx-cpu
     ```
-    ***Important:** The current demos are designed to use the ONNX versions of the model. Clone the following modes. Currently there is no ONNX version available for the **Phi-3-vision-128k-instruct** model.*
+    ***Important:** The current demos are designed to use the ONNX versions of the model. The previous steps clone the following models.*
     ![Download only ONNX models](./img/10DownloadOnnx.png)
 
 You can learn more about [Phi-3 in Hugging Face](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx).
