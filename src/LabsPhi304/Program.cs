@@ -1,52 +1,103 @@
-﻿using feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
+﻿using LabsPhi304;
+using Microsoft.ML.OnnxRuntimeGenAI;
+using System.Reflection;
 
-
-var systemPrompt = "You are an AI assistant that helps people answering their questions. Answer questions using a direct style. Do not share more information that the requested by the users.";
-
+// path for model and images
 var modelPath = @"d:\phi3\models\Phi-3-vision-128k-instruct-onnx-cpu\cpu-int4-rtn-block-32-acc-level-4";
+var foggyDayImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "foggyday.png");
+var petsMusicImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "petsmusic.png");
+var ultraMugImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "ultrarunningmug.png");
 
-// create kernel
-var builder = Kernel.CreateBuilder();
-builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
-var kernel = builder.Build();
+// load model and create processor
+using Model model = new Model(modelPath);
+using MultiModalProcessor processor = new MultiModalProcessor(model);
+using var tokenizerStream = processor.CreateStream();
+var tokenizer = new Tokenizer(model);
 
-// create chat
-var chat = kernel.GetRequiredService<IChatCompletionService>();
-var history = new ChatHistory();
+// define prompts
+var systemPrompt = "You are an AI assistant that helps people find information. Answer questions using a direct style. Do not share more information that the requested by the users.";
 
 
-//new Uri("https://github.com/elbruno/gpt4ol-sk-csharp/blob/main/imgs/rpi5.png?raw=true"))
-// create a local uri for the image in the current path + "imgs\petsmusic.jpg"
-var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "petsmusic.jpg");
-var imageUri = new Uri(imagePath);
-var collectionItems = new ChatMessageContentItemCollection
+// write title
+SpectreConsoleOutput.DisplayTitle($"C# - Phi-3v");
+
+// user choice scenarios
+var scenarios = SpectreConsoleOutput.SelectScenarios();
+var scenario = scenarios[0];
+
+// switch between the options for the selected scenario
+// options can be file names with extension equal to ".png" or ".jpg"
+// or the values "Type the image path to be analyzed" or "Type a question"
+switch (scenario)
 {
-    new ImageContent(imageUri),
-    new TextContent("What is shown in this image"),
-    new TextContent("What's the capital of Germany?"),
-};
-
-//var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "ultrarunningmug.png");
-//var imageBytes = File.ReadAllBytes(imagePath);
-//var collectionItems = new ChatMessageContentItemCollection
-//{
-//    new ImageContent(imageBytes),
-//    new TextContent("What is shown in this image"),
-//};
-
-
-history.AddUserMessage(collectionItems);
-
-
-Console.Write($"Phi3: ");
-var response = "";
-var result = chat.GetStreamingChatMessageContentsAsync(history);
-await foreach (var message in result)
-{
-    Console.Write(message.Content);
-    response += message.Content;
+    case "foggyday.png":
+    case "petsmusic.png":
+    case "ultrarunningmug.png":
+        var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", scenario);
+        AnalizeImage(imagePath);
+        break;
+    case "Type the image path to be analyzed":
+        scenario = SpectreConsoleOutput.AskForString("Type the image path to be analyzed");
+        AnalizeImage(scenario);
+        break;
+    case "Type a question":        
+        AnswerQuestion();
+        break;
 }
-history.AddAssistantMessage(response);
-Console.WriteLine("");
+SpectreConsoleOutput.DisplayTitleH3("Done !");
+
+void AnswerQuestion()
+{
+    var question = SpectreConsoleOutput.AskForString("Type a question");
+    SpectreConsoleOutput.DisplayQuestion(question);
+    SpectreConsoleOutput.DisplayAnswerStart("Phi-3");
+
+    var fullPrompt = $"<|system|>{systemPrompt}<|end|><|user|>{question}<|end|><|assistant|>";
+    var tokens = tokenizer.Encode(fullPrompt);
+
+    var generatorParams = new GeneratorParams(model);
+    generatorParams.SetSearchOption("max_length", 2048);
+    generatorParams.SetSearchOption("past_present_share_buffer", false);
+    generatorParams.SetInputSequences(tokens);
+
+    var generator = new Generator(model, generatorParams);
+    while (!generator.IsDone())
+    {
+        generator.ComputeLogits();
+        generator.GenerateNextToken();
+        var outputTokens = generator.GetSequence(0);
+        var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
+        var output = tokenizer.Decode(newToken);
+        Console.Write(output);
+    }
+    Console.WriteLine();
+}
+
+void AnalizeImage(string imagePath)
+{
+    var img = Images.Load(petsMusicImagePath);
+    string userPrompt = "Describe the image, and return the string 'STOP' at the end.";
+    var fullPrompt = $"<|system|>{systemPrompt}<|end|><|user|><|image_1|>{userPrompt}<|end|><|assistant|>";
+
+    // create the input tensor with the prompt and image
+    Console.WriteLine("Full Prompt: " + fullPrompt);
+    Console.WriteLine("Start processing image and prompt ...");
+    var inputTensors = processor.ProcessImages(fullPrompt, img);
+    using GeneratorParams generatorParams = new GeneratorParams(model);
+    generatorParams.SetSearchOption("max_length", 3072);
+    generatorParams.SetInputs(inputTensors);
+
+    // generate response
+    Console.WriteLine("Generating response ...");
+    using var generator = new Generator(model, generatorParams);
+    while (!generator.IsDone())
+    {
+        generator.ComputeLogits();
+        generator.GenerateNextToken();
+        var seq = generator.GetSequence(0)[^1];
+        Console.Write(tokenizerStream.Decode(seq));
+    }
+
+    Console.WriteLine("");
+    Console.WriteLine("Done!");
+}
