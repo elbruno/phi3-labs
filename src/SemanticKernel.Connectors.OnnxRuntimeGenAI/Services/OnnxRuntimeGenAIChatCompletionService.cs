@@ -22,7 +22,8 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 {
     private readonly Model _model;
     private readonly Tokenizer _tokenizer;
-
+    private readonly MultiModalProcessor _processor;
+    private readonly TokenizerStream _tokenizerStream;
     private Dictionary<string, object?> AttributesInternal { get; } = new();
 
     /// <summary>
@@ -35,7 +36,12 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         ILoggerFactory? loggerFactory = null)
     {
         _model = new Model(modelPath);
-        _tokenizer = new Tokenizer(_model);
+
+        if (modelPath.Contains("vision"))
+        {
+            _processor = new MultiModalProcessor(_model);
+            _tokenizerStream = _processor.CreateStream();
+        }
 
         this.AttributesInternal.Add(AIServiceExtensions.ModelIdKey, _tokenizer);
     }
