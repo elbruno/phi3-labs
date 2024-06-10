@@ -50,12 +50,7 @@ var collectionItems = new ChatMessageContentItemCollection
 history.AddUserMessage(collectionItems);
 
 Console.Write($"Phi3: ");
-var response = "";
-var result = chat.GetStreamingChatMessageContentsAsync(history);
-await foreach (var message in result)
-{
-    Console.Write(message.Content);
-    response += message.Content;
-}
-history.AddAssistantMessage(response);
+var result = await chat.GetChatMessageContentsAsync(history);
+Console.WriteLine(result[^1].Content);
+
 Console.WriteLine("");

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -12,6 +13,7 @@ using Microsoft.ML.OnnxRuntimeGenAI;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Services;
+using philabs.SemanticKernel.Connectors.OnnxRuntimeGenAI.Models;
 
 namespace feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
 
@@ -36,6 +38,7 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         ILoggerFactory? loggerFactory = null)
     {
         _model = new Model(modelPath);
+        _tokenizer = new Tokenizer(_model);
 
         if (modelPath.Contains("vision"))
         {
@@ -81,41 +84,59 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         OnnxRuntimeGenAIPromptExecutionSettings onnxRuntimeGenAIPromptExecutionSettings = OnnxRuntimeGenAIPromptExecutionSettings.FromExecutionSettings(executionSettings);
 
         var prompt = GetPrompt(chatHistory, onnxRuntimeGenAIPromptExecutionSettings);
-        var tokens = _tokenizer.Encode(prompt);
 
-        var generatorParams = new GeneratorParams(_model);
-        ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
-        generatorParams.SetInputSequences(tokens);
-
-        var generator = new Generator(_model, generatorParams);
-
-        while (!generator.IsDone())
+        if (!prompt.ImageFound)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            var tokens = _tokenizer.Encode(prompt.Prompt);
+            var generatorParams = new GeneratorParams(_model);
+            ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
+            generatorParams.SetInputSequences(tokens);
 
-            yield return await Task.Run(() =>
+            var generator = new Generator(_model, generatorParams);
+
+            while (!generator.IsDone())
             {
-                generator.ComputeLogits();
-                generator.GenerateNextToken();
+                cancellationToken.ThrowIfCancellationRequested();
 
-                var outputTokens = generator.GetSequence(0);
-                var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
-                var output = _tokenizer.Decode(newToken);
-                return output;
-            }, cancellationToken);
+                yield return await Task.Run(() =>
+                {
+                    generator.ComputeLogits();
+                    generator.GenerateNextToken();
+
+                    var outputTokens = generator.GetSequence(0);
+                    var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
+                    var output = _tokenizer.Decode(newToken);
+                    return output;
+                }, cancellationToken);
+            }
         }
     }
 
-    private string GetPrompt(ChatHistory chatHistory, OnnxRuntimeGenAIPromptExecutionSettings onnxRuntimeGenAIPromptExecutionSettings)
+    private PromptBuilderResult GetPrompt(ChatHistory chatHistory, OnnxRuntimeGenAIPromptExecutionSettings onnxRuntimeGenAIPromptExecutionSettings)
     {
+        var result = new PromptBuilderResult();
         var promptBuilder = new StringBuilder();
         foreach (var message in chatHistory)
         {
             promptBuilder.Append($"<|{message.Role}|>\n{message.Content}");
+
+            // process sub items
+            foreach (var item in message.Items)
+            {
+                if (item is ImageContent imageContent)
+                {
+                    result.ImageFound = true;
+                    result.ImageBytes = item.InnerContent as byte[];
+                    promptBuilder.Append($"<|image_1|>");
+                }
+            }
+
         }
         promptBuilder.Append($"<|end|>\n<|assistant|>");
 
-        return promptBuilder.ToString();
+        result.Prompt = promptBuilder.ToString();
+
+        return result;
     }
 
     private void ApplyPromptExecutionSettings(GeneratorParams generatorParams, OnnxRuntimeGenAIPromptExecutionSettings onnxRuntimeGenAIPromptExecutionSettings)
