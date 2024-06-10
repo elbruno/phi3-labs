@@ -84,30 +84,48 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
     {
         OnnxRuntimeGenAIPromptExecutionSettings onnxRuntimeGenAIPromptExecutionSettings = OnnxRuntimeGenAIPromptExecutionSettings.FromExecutionSettings(executionSettings);
 
-        var prompt = GetPrompt(chatHistory, onnxRuntimeGenAIPromptExecutionSettings);
+        var promptResult = GetPrompt(chatHistory, onnxRuntimeGenAIPromptExecutionSettings);
 
         Generator generator;
         // no images attached
-        if (!prompt.ImageFound)
-        {
-            var tokens = _tokenizer.Encode(prompt.Prompt);
-            var generatorParams = new GeneratorParams(_model);
-            ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
-            generatorParams.SetInputSequences(tokens);
+        //if (!promptResult.ImageFound)
+        //{
+        //    var tokens = _tokenizer.Encode(promptResult.Prompt);
+        //    var generatorParams = new GeneratorParams(_model);
+        //    ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
+        //    generatorParams.SetInputSequences(tokens);
 
-            generator = new Generator(_model, generatorParams);
+        //    generator = new Generator(_model, generatorParams);
+        //}
+        //else
+        //{
+        //    var img = Images.Load(promptResult.ImagePath);
+        //    var inputTensors = _processor.ProcessImages(promptResult.Prompt, img);
+        //    var generatorParams = new GeneratorParams(_model);
+        //    ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
+        //    generatorParams.SetSearchOption("max_length", 3072);
+        //    generatorParams.SetInputs(inputTensors);
+        //    generator = new Generator(_model, generatorParams);
+        //}
+
+        var generatorParams = new GeneratorParams(_model);
+        ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
+
+        if (!promptResult.ImageFound)
+        {
+            var tokens = _tokenizer.Encode(promptResult.Prompt);
+            generatorParams.SetInputSequences(tokens);
         }
         else
         {
-
-            var img = Images.Load(prompt.ImagePath);
-            var inputTensors = _processor.ProcessImages(prompt.Prompt, img);
-            var generatorParams = new GeneratorParams(_model);
-            ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
+            var img = Images.Load(promptResult.ImagePath);
+            var inputTensors = _processor.ProcessImages(promptResult.Prompt, img);
             generatorParams.SetSearchOption("max_length", 3072);
             generatorParams.SetInputs(inputTensors);
-            generator = new Generator(_model, generatorParams);
         }
+
+        generator = new Generator(_model, generatorParams);
+
 
         if (generator is not null)
             while (!generator.IsDone())
@@ -141,20 +159,20 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
             {
                 if (item is ImageContent imageContent)
                 {
-                    var imageItem = item as ImageContent;
                     result.ImageFound = true;
+                    promptBuilder.Append($"<|image_1|>");
 
-                    // Copy the content of imageItem.Data to imageItem array of bytes
+                    var imageItem = item as ImageContent;
+
                     if (imageItem?.Data != null)
                     {
-                        //byte[] sourceArray = imageItem.Data.Value.ToArray();
                         result.ImageBytes = imageItem.Data.Value.ToArray();
-                        //Buffer.BlockCopy(sourceArray, 0, result.ImageBytes, 0, sourceArray.Length);
                     }
-
-
-
-                    promptBuilder.Append($"<|image_1|>");
+                    else if (imageItem?.Uri != null)
+                    {
+                        result.Uri = imageItem.Uri;
+                    }
+                    break;
                 }
             }
 
