@@ -36,12 +36,21 @@ You can learn more about [Phi-3 in Hugging Face](https://huggingface.co/microsof
 
 The main solution have several sample projects that demonstrates the capabilities of the Phi-3 models.
 
+### Microsoft ML ONNX Runtime Samples
+
 | Project | Description | Location |
 | ------------ | ----------- | -------- |
 | LabsPhi301    | This is a sample project that uses a local phi3 model to ask a question. The project load a local ONNX Phi-3 model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi301\ |
-| LabsPhi302    | This is a sample project that implement a Console chat using Semantic Kernel. | .\src\LabsPhi302\ |
 | LabsPhi303 | This is a sample project that uses a local phi3 vision model to analyze images.. The project load a local ONNX Phi-3 Vision model using the `Microsoft.ML.OnnxRuntime` libraries. | .\src\LabsPhi303\ |
 | LabsPhi304 | This is a sample project that uses a local phi3 vision model to analyze images.. The project load a local ONNX Phi-3 Vision model using the `Microsoft.ML.OnnxRuntime` libraries. The project also presents a menu with different options to interacti with the user. | .\src\LabsPhi304\ |
+
+### Semantic Kernel Samples 
+
+| Project | Description | Location |
+| ------------ | ----------- | -------- |
+| LabsPhi3_sk01 | This is a sample project that uses a local phi3 model to ask a question. The project uses Semantic Kernel and [SemanticKernel.Connectors.OnnxRuntimeGenAI](https://github.com/feiyun0112/SemanticKernel.Connectors.OnnxRuntimeGenAI) to load a local Phi-3 model and implement a console chat.  | .\src\LabsPhi3_sk01\ |
+| LabsPhi3_sk02 | This is a sample project that uses a local phi3 model to ask a question. The project uses Semantic Kernel and a local copy of the source code and project [SemanticKernel.Connectors.OnnxRuntimeGenAI](/src/SemanticKernel.Connectors.OnnxRuntimeGenAI/OnnxRuntimeGenAIKernelBuilderExtensions.cs) to load a local Phi-3 model and implement a console chat. | .\src\LabsPhi3_sk02\ |
+| LabsPhi3_sk03 | The project uses Semantic Kernel and the local copy of the source code and project [SemanticKernel.Connectors.OnnxRuntimeGenAI](/src/SemanticKernel.Connectors.OnnxRuntimeGenAI/OnnxRuntimeGenAIKernelBuilderExtensions.cs) to load a local Phi-3 Vision model and analyzes and describes an image. | .\src\LabsPhi3_sk03\ |
 
 
 ## How to Run the Projects
@@ -72,7 +81,12 @@ To run the projects, follow these steps:
     The running demo is similar to this one:
 
     ![Image Analysis running demo](./img/30SampleVisionConsole.gif)
-    
+
+## References
+
+- [Semantic Kernel main repository](https://github.com/microsoft/semantic-kernel)
+-  [SemanticKernel.Connectors.OnnxRuntimeGenAI repository by feiyun0112](https://github.com/feiyun0112/SemanticKernel.Connectors.OnnxRuntimeGenAI)
+
 
 ## Author
 
