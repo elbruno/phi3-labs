@@ -24,7 +24,6 @@
 
 using Microsoft.ML.OnnxRuntimeGenAI;
 
-
 var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
 var model = new Model(modelPath);
 var tokenizer = new Tokenizer(model);
@@ -33,7 +32,6 @@ var systemPrompt = "You are an AI assistant that helps people find information. 
 
 // chat start
 Console.WriteLine(@"Ask your question. Type an empty string to Exit.");
-
 
 // chat loop
 while (true)
