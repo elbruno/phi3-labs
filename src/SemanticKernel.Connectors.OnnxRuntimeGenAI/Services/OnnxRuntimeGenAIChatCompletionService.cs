@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,6 +86,8 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 
         var prompt = GetPrompt(chatHistory, onnxRuntimeGenAIPromptExecutionSettings);
 
+        Generator generator;
+        // no images attached
         if (!prompt.ImageFound)
         {
             var tokens = _tokenizer.Encode(prompt.Prompt);
@@ -92,8 +95,21 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
             ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
             generatorParams.SetInputSequences(tokens);
 
-            var generator = new Generator(_model, generatorParams);
+            generator = new Generator(_model, generatorParams);
+        }
+        else
+        {
 
+            var img = Images.Load(prompt.ImagePath);
+            var inputTensors = _processor.ProcessImages(prompt.Prompt, img);
+            var generatorParams = new GeneratorParams(_model);
+            ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
+            generatorParams.SetSearchOption("max_length", 3072);
+            generatorParams.SetInputs(inputTensors);
+            generator = new Generator(_model, generatorParams);
+        }
+
+        if (generator is not null)
             while (!generator.IsDone())
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -109,7 +125,7 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
                     return output;
                 }, cancellationToken);
             }
-        }
+
     }
 
     private PromptBuilderResult GetPrompt(ChatHistory chatHistory, OnnxRuntimeGenAIPromptExecutionSettings onnxRuntimeGenAIPromptExecutionSettings)
@@ -125,8 +141,19 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
             {
                 if (item is ImageContent imageContent)
                 {
+                    var imageItem = item as ImageContent;
                     result.ImageFound = true;
-                    result.ImageBytes = item.InnerContent as byte[];
+
+                    // Copy the content of imageItem.Data to imageItem array of bytes
+                    if (imageItem?.Data != null)
+                    {
+                        //byte[] sourceArray = imageItem.Data.Value.ToArray();
+                        result.ImageBytes = imageItem.Data.Value.ToArray();
+                        //Buffer.BlockCopy(sourceArray, 0, result.ImageBytes, 0, sourceArray.Length);
+                    }
+
+
+
                     promptBuilder.Append($"<|image_1|>");
                 }
             }

@@ -39,13 +39,12 @@ var chat = kernel.GetRequiredService<IChatCompletionService>();
 var history = new ChatHistory();
 
 var petsMusicImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "petsmusic.png");
-var img = File.ReadAllBytes(petsMusicImagePath);
 
 // create chat collection items
 var collectionItems = new ChatMessageContentItemCollection
 {
     new TextContent("What's in the image?"),
-    new ImageContent(img)
+    new ImageContent(File.ReadAllBytes(petsMusicImagePath))
 };
 history.AddUserMessage(collectionItems);
 
