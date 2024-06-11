@@ -22,10 +22,12 @@
 //    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //    THE SOFTWARE.
 
+using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntimeGenAI;
 
 // path for model and images
-var modelPath = @"d:\phi3\models\Phi-3-vision-128k-instruct-onnx-cpu\cpu-int4-rtn-block-32-acc-level-4";
+var modelPath = @"c:\src\Phi3\models\Phi-3-vision-128k-instruct-onnx-cpu\cpu-int4-rtn-block-32-acc-level-4";
+//var modelPath = @"c:\src\Phi3\models\Phi-3-vision-128k-instruct-onnx-cuda\cuda-int4-rtn-block-32";
 
 var foggyDayImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "foggyday.png");
 var petsMusicImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "petsmusic.png");
