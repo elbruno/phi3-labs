@@ -40,13 +40,16 @@ var history = new ChatHistory();
 
 var petsMusicImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "petsmusic.png");
 
+// get the mime type from the image
+var mimeType = "image/png";
+
 // create chat collection items
 var collectionItems = new ChatMessageContentItemCollection
 {
     new TextContent("What's in the image?"),
     //new ImageContent( new Uri(petsMusicImagePath))
     //new ImageContent( new Uri("https://github.com/elbruno/gpt4o-labs-csharp/tree/main/src/GPT4o_AOAI_lab02/imgs/foggyday.png?raw=true"))
-    new ImageContent(File.ReadAllBytes(petsMusicImagePath))
+    new ImageContent(File.ReadAllBytes(petsMusicImagePath), mimeType)
 };
 history.AddUserMessage(collectionItems);
 
