@@ -44,9 +44,9 @@ var petsMusicImagePath = Path.Combine(Directory.GetCurrentDirectory(), "imgs", "
 var collectionItems = new ChatMessageContentItemCollection
 {
     new TextContent("What's in the image?"),
-    new ImageContent( new Uri(petsMusicImagePath))
+    //new ImageContent( new Uri(petsMusicImagePath))
     //new ImageContent( new Uri("https://github.com/elbruno/gpt4o-labs-csharp/tree/main/src/GPT4o_AOAI_lab02/imgs/foggyday.png?raw=true"))
-    //new ImageContent(File.ReadAllBytes(petsMusicImagePath))
+    new ImageContent(File.ReadAllBytes(petsMusicImagePath))
 };
 history.AddUserMessage(collectionItems);
 
