@@ -30,20 +30,27 @@
 #pragma warning disable SKEXP0050
 #pragma warning disable SKEXP0052
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Plugins.Memory;
 
-var question = "What is Bruno's favourite super hero?";
-Console.WriteLine($"This program will answer the following question: {question}");
-Console.WriteLine("1st approach will be to ask the question directly to the Phi-3 model.");
-Console.WriteLine("2nd approach will be to add facts to a semantic memory and ask the question again");
+// questions
+var questionEnglish = "What is Bruno's favourite super hero?";
+var questionSpanish = "Cual es el SuperHeroe favorito de Bruno?";
+var questionFrench = "Quel est le super-héros préféré de Bruno ?";
+var questionGerman = "Wer ist Brunos Lieblings-Superheld?";
+var question = questionEnglish;
+
+// intro
+
+SpectreConsoleOutput.DisplayTitle();
+SpectreConsoleOutput.DisplayTitleH2($"This program will answer the following question:");
+SpectreConsoleOutput.DisplayTitleH2(question);
+SpectreConsoleOutput.DisplayTitleH3("1st approach will be to ask the question directly to the Phi-3 model.");
+SpectreConsoleOutput.DisplayTitleH3("2nd approach will be to add facts to a semantic memory and ask the question again");
 Console.WriteLine("");
 
 var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
@@ -54,21 +61,19 @@ builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
 builder.AddLocalTextEmbeddingGeneration();
 Kernel kernel = builder.Build();
 
-Console.WriteLine($"Phi-3 response (no memory).");
+SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (no memory).");
 var response = kernel.InvokePromptStreamingAsync(question);
 await foreach (var result in response)
 {
-    Console.Write(result);
+    SpectreConsoleOutput.WriteGreen(result.ToString());
 }
 
 // separator
 Console.WriteLine("");
-Console.WriteLine("==============");
+SpectreConsoleOutput.DisplaySeparator();
 Console.WriteLine("Press Enter to continue");
 Console.ReadLine();
-Console.WriteLine("==============");
-Console.WriteLine($"Phi-3 response (using semantic memory).");
-Console.WriteLine("");
+SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (using semantic memory).");
 
 // get the embeddings generator service
 var embeddingGenerator = kernel.Services.GetRequiredService<ITextEmbeddingGenerationService>();
@@ -94,8 +99,7 @@ OpenAIPromptExecutionSettings settings = new()
 };
 
 
-var prompt = @"
-    Question: {{$input}}
+var prompt = @"Question: {{$input}}
     Answer the question using the memory content: {{Recall}}";
 
 var arguments = new KernelArguments(settings)
@@ -104,12 +108,10 @@ var arguments = new KernelArguments(settings)
     { "collection", MemoryCollectionName }
 };
 
-
-
 response = kernel.InvokePromptStreamingAsync(prompt, arguments);
 await foreach (var result in response)
 {
-    Console.Write(result);
+    SpectreConsoleOutput.WriteGreen(result.ToString());
 }
 
 Console.WriteLine($"");
