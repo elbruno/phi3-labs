@@ -40,9 +40,9 @@ using Microsoft.SemanticKernel.Plugins.Memory;
 // questions
 var questionEnglish = "What is Bruno's favourite super hero?";
 var questionSpanish = "Cual es el SuperHeroe favorito de Bruno?";
-var questionFrench = "Quel est le super-héros préféré de Bruno ?";
-var questionGerman = "Wer ist Brunos Lieblings-Superheld?";
-var question = questionEnglish;
+var questionFrench = "Quel est le super-héros préféré de Bruno?";
+var questionEnglish1 = "Who likes Batman?";
+var question = questionEnglish1;
 
 // intro
 
@@ -85,7 +85,7 @@ const string MemoryCollectionName = "fanFacts";
 await memory.SaveInformationAsync(MemoryCollectionName, id: "info1", text: "Gisela's favourite super hero is Batman");
 await memory.SaveInformationAsync(MemoryCollectionName, id: "info2", text: "The last super hero movie watched by Gisela was Guardians of the Galaxy Vol 3");
 await memory.SaveInformationAsync(MemoryCollectionName, id: "info3", text: "Bruno's favourite super hero is Invincible");
-await memory.SaveInformationAsync(MemoryCollectionName, id: "info4", text: "The last super hero movie watched by Bruno was Aquaman II");
+await memory.SaveInformationAsync(MemoryCollectionName, id: "info4", text: "The last super hero movie watched by Bruno was Deadpool and Wolverine");
 await memory.SaveInformationAsync(MemoryCollectionName, id: "info5", text: "Bruno don't like the super hero movie: Eternals");
 
 TextMemoryPlugin memoryPlugin = new(memory);
@@ -97,7 +97,6 @@ OpenAIPromptExecutionSettings settings = new()
 {
     ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
 };
-
 
 var prompt = @"Question: {{$input}}
     Answer the question using the memory content: {{Recall}}";
