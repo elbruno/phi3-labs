@@ -28,6 +28,8 @@ using Microsoft.SemanticKernel.ChatCompletion;
 
 // path for model and images
 var modelPath = @"d:\phi3\models\Phi-3-vision-128k-instruct-onnx-cpu\cpu-int4-rtn-block-32-acc-level-4";
+//var modelPath = @"d:\phi3\models\Phi-3-vision-128k-instruct-onnx-cuda\cuda-fp16";
+//var modelPath = @"d:\phi3\models\Phi-3-vision-128k-instruct-onnx-cuda\cuda-int4-rtn-block-32-bruno";
 
 // create kernel
 var builder = Kernel.CreateBuilder();

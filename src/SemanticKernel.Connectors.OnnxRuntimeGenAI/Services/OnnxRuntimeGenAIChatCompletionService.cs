@@ -1,11 +1,4 @@
-﻿
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +9,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Services;
 using philabs.SemanticKernel.Connectors.OnnxRuntimeGenAI.Models;
 
-namespace feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
+namespace philabs.SemanticKernel.Connectors.OnnxRuntimeGenAI;
 
 /// <summary>
 /// Represents a chat completion service using OnnxRuntimeGenAI.
@@ -87,26 +80,6 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         var promptResult = GetPrompt(chatHistory, onnxRuntimeGenAIPromptExecutionSettings);
 
         Generator generator;
-        // no images attached
-        //if (!promptResult.ImageFound)
-        //{
-        //    var tokens = _tokenizer.Encode(promptResult.Prompt);
-        //    var generatorParams = new GeneratorParams(_model);
-        //    ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
-        //    generatorParams.SetInputSequences(tokens);
-
-        //    generator = new Generator(_model, generatorParams);
-        //}
-        //else
-        //{
-        //    var img = Images.Load(promptResult.ImagePath);
-        //    var inputTensors = _processor.ProcessImages(promptResult.Prompt, img);
-        //    var generatorParams = new GeneratorParams(_model);
-        //    ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);
-        //    generatorParams.SetSearchOption("max_length", 3072);
-        //    generatorParams.SetInputs(inputTensors);
-        //    generator = new Generator(_model, generatorParams);
-        //}
 
         var generatorParams = new GeneratorParams(_model);
         ApplyPromptExecutionSettings(generatorParams, onnxRuntimeGenAIPromptExecutionSettings);

@@ -1,14 +1,7 @@
-﻿
-
-using System;
-using System.Net.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.ChatCompletion;
-using feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
-using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.Http;
-using Microsoft.SemanticKernel.TextGeneration;
+using philabs.SemanticKernel.Connectors.OnnxRuntimeGenAI;
 
 namespace Microsoft.SemanticKernel;
 

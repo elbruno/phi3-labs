@@ -1,11 +1,7 @@
-﻿
-
-using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel;
 
-namespace feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
+namespace philabs.SemanticKernel.Connectors.OnnxRuntimeGenAI;
 
 /// <summary>
 /// OnnxRuntimeGenAI Execution Settings.
