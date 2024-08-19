@@ -32,6 +32,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Memory;
@@ -43,10 +44,9 @@ var questionSpanish = "Cual es el SuperHeroe favorito de Bruno?";
 var questionFrench = "Quel est le super-héros préféré de Bruno?";
 var questionEnglish1 = "Who likes Batman?";
 var questionSpanish2 = "A quien le gusta Batman?";
-var question = questionSpanish2;
+var question = questionEnglish;
 
 // intro
-
 SpectreConsoleOutput.DisplayTitle();
 SpectreConsoleOutput.DisplayTitleH2($"This program will answer the following question:");
 SpectreConsoleOutput.DisplayTitleH2(question);
@@ -61,9 +61,13 @@ var builder = Kernel.CreateBuilder();
 builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
 builder.AddLocalTextEmbeddingGeneration();
 Kernel kernel = builder.Build();
+var chat = kernel.GetRequiredService<IChatCompletionService>();
 
+// no memory
 SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (no memory).");
-var response = kernel.InvokePromptStreamingAsync(question);
+var history = new ChatHistory();
+history.AddUserMessage(question);
+var response = chat.GetStreamingChatMessageContentsAsync(history);
 await foreach (var result in response)
 {
     SpectreConsoleOutput.WriteGreen(result.ToString());
@@ -75,6 +79,9 @@ SpectreConsoleOutput.DisplaySeparator();
 Console.WriteLine("Press Enter to continue");
 Console.ReadLine();
 SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (using semantic memory).");
+
+// Using memory
+history = new ChatHistory();
 
 // get the embeddings generator service
 var embeddingGenerator = kernel.Services.GetRequiredService<ITextEmbeddingGenerationService>();
@@ -108,8 +115,8 @@ var arguments = new KernelArguments(settings)
     { "collection", MemoryCollectionName }
 };
 
-response = kernel.InvokePromptStreamingAsync(prompt, arguments);
-await foreach (var result in response)
+var newResponse = kernel.InvokePromptStreamingAsync(prompt, arguments);
+await foreach (var result in newResponse)
 {
     SpectreConsoleOutput.WriteGreen(result.ToString());
 }

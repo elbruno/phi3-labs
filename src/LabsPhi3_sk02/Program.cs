@@ -22,19 +22,27 @@
 //    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //    THE SOFTWARE.
 
+#pragma warning disable SKEXP0010
+
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
 var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
 
+var model = "phi3";
+var endpoint = "https://localhost:14141";
+var apiKey = "apiKey";
+
+
 // create kernel
 var builder = Kernel.CreateBuilder();
-builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
+builder.AddOpenAIChatCompletion(model, new Uri(endpoint), apiKey);
 var kernel = builder.Build();
 
 // create chat
 var chat = kernel.GetRequiredService<IChatCompletionService>();
 var history = new ChatHistory();
+history.AddSystemMessage("You are a useful assistant. You always reply with a short and funny message using emojis. If you don't know an answer, you say 'I don't know that.' You only answers questions relates to math problems. For any other type of questions, explain the user that you only answer math problems questions.");
 
 // run chat
 while (true)

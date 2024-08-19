@@ -7,6 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="..\LabsPhi3_sk_rag01\SpectreConsoleOutput.cs" Link="SpectreConsoleOutput.cs" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.KernelMemory.SemanticKernelPlugin" Version="0.70.240803.1" />
 		<PackageReference Include="Microsoft.SemanticKernel" Version="1.17.1" />
@@ -17,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\SemanticKernel.Connectors.OnnxRuntimeGenAI\Connectors.OnnxRuntimeGenAI.csproj" />
-  </ItemGroup>
+		<ProjectReference Include="..\SemanticKernel.Connectors.OnnxRuntimeGenAI\Connectors.OnnxRuntimeGenAI.csproj" />
+	</ItemGroup>
 
 </Project>
