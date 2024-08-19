@@ -37,6 +37,10 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Plugins.Memory;
+using SmartComponents.StaticAssets.Inference;
+
+// system message
+var systemMessage = "You are a helpful assistant. You reply in short and precise answers, and you explain your responses. If you don't know an answer, you reply 'I don't know'";
 
 // questions
 var questionEnglish = "What is Bruno's favourite super hero?";
@@ -58,7 +62,11 @@ var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-
 
 // Create a chat completion service
 var builder = Kernel.CreateBuilder();
-builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
+//builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
+builder.AddOpenAIChatCompletion(
+    modelId: "phi3",
+    endpoint: new Uri("http://localhost:11434"),
+    apiKey: "apikey");
 builder.AddLocalTextEmbeddingGeneration();
 Kernel kernel = builder.Build();
 var chat = kernel.GetRequiredService<IChatCompletionService>();
@@ -66,6 +74,8 @@ var chat = kernel.GetRequiredService<IChatCompletionService>();
 // no memory
 SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (no memory).");
 var history = new ChatHistory();
+history.AddSystemMessage(systemMessage);
+
 history.AddUserMessage(question);
 var response = chat.GetStreamingChatMessageContentsAsync(history);
 await foreach (var result in response)
@@ -82,6 +92,7 @@ SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (using semantic memory).");
 
 // Using memory
 history = new ChatHistory();
+history.AddSystemMessage(systemMessage);
 
 // get the embeddings generator service
 var embeddingGenerator = kernel.Services.GetRequiredService<ITextEmbeddingGenerationService>();
@@ -109,13 +120,16 @@ OpenAIPromptExecutionSettings settings = new()
 var prompt = @"Question: {{$input}}
     Answer the question using the memory content: {{Recall}}";
 
+history.AddUserMessage(prompt);
+
 var arguments = new KernelArguments(settings)
 {
     { "input", question },
-    { "collection", MemoryCollectionName }
+    { "collection", MemoryCollectionName },
+    { "messages", history }
 };
 
-var newResponse = kernel.InvokePromptStreamingAsync(prompt, arguments);
+var newResponse = kernel.InvokePromptStreamingAsync<StreamingChatMessageContent>(prompt, arguments);
 await foreach (var result in newResponse)
 {
     SpectreConsoleOutput.WriteGreen(result.ToString());

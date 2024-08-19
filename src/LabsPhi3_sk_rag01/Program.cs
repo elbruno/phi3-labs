@@ -58,7 +58,11 @@ var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-
 
 // Create a chat completion service
 var builder = Kernel.CreateBuilder();
-builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
+//builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
+builder.AddOpenAIChatCompletion(
+    modelId: "phi3",
+    endpoint: new Uri("http://localhost:11434"),
+    apiKey: "apikey");
 builder.AddLocalTextEmbeddingGeneration();
 Kernel kernel = builder.Build();
 
