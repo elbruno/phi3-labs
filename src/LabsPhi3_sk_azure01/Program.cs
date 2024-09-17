@@ -1,17 +1,16 @@
-﻿using feiyun0112.SemanticKernel.Connectors.OnnxRuntimeGenAI;
+﻿#pragma warning disable SKEXP0010 
+using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-
-var systemPrompt = "You are an AI assistant that helps people find information. Answer questions using a direct style. Do not share more information that the requested by the users.";
-var userQuestion = "What is the capital of France?";
-var assistantResponse = "The capital of France is Paris.";
-
-var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
+var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+var modelId = config["AZURE_AI_PHI3_MODEL"];
+var endPoint = config["AZURE_AI_PHI3_ENDPOINT"];
+var apiKey = config["AZURE_AI_PHI3_APIKEY"];
 
 // create kernel
 var builder = Kernel.CreateBuilder();
-builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
+builder.AddOpenAIChatCompletion(modelId, new Uri(endPoint), apiKey);
 var kernel = builder.Build();
 
 // create chat

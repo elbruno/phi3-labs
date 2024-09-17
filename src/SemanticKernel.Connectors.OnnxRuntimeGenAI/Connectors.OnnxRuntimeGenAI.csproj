@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>philabs.SemanticKernel.Connectors.OnnxRuntimeGenAI</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
+    <Configurations>Debug;Release;Debug_Cuda;Release_Cuda;Debug_DirectML;Release_DirectML;</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- NuGet Package Settings -->
+    <Title>Semantic Kernel-Microsoft.ML.OnnxRuntimeGenAI connectors</Title>
+    <Description>Semantic Kernel connector for Microsoft.ML.OnnxRuntimeGenAI.</Description>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.19.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI" Version="0.3.0" Condition=" '$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release' " />
+    <PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI.Cuda" Version="0.2.0-rc4" Condition=" '$(Configuration)' == 'Debug_Cuda' OR '$(Configuration)' == 'Release_Cuda' " />
+	  <PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI.DirectML" Version="0.2.0-rc4" Condition=" '$(Configuration)' == 'Debug_DirectML' OR '$(Configuration)' == 'Release_DirectML' " />
+	  <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.17.1" />
+  </ItemGroup>
+
+</Project>
