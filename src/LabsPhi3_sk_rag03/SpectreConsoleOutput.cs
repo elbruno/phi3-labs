@@ -55,7 +55,14 @@ public static class SpectreConsoleOutput
 
     public static void WriteGreen(string message)
     {
-        AnsiConsole.Markup($"[green]{message}[/]");
+        try
+        {
+            AnsiConsole.Markup($"[green]{message}[/]");
+        }
+        catch
+        {
+            AnsiConsole.Write($"{message}");
+        }
     }
 
     public static void DisplayQuestion(string question)

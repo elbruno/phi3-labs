@@ -37,32 +37,32 @@ using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Plugins.Memory;
 
+var modelId = "phi4";
+
 // questions
 var questionEnglish = "What is Bruno's favourite super hero?";
 var questionSpanish = "Cual es el SuperHeroe favorito de Bruno?";
 var questionFrench = "Quel est le super-héros préféré de Bruno?";
 var questionEnglish1 = "Who likes Batman?";
 var questionSpanish2 = "A quien le gusta Batman?";
-var question = questionSpanish2;
+var question = questionEnglish;
 
 // intro
 
-SpectreConsoleOutput.DisplayTitle();
+SpectreConsoleOutput.DisplayTitle(modelId);
 SpectreConsoleOutput.DisplayTitleH2($"This program will answer the following question:");
 SpectreConsoleOutput.DisplayTitleH2(question);
 SpectreConsoleOutput.DisplayTitleH3("1st approach will be to ask the question directly to the Phi-3 model.");
 SpectreConsoleOutput.DisplayTitleH3("2nd approach will be to add facts to a semantic memory and ask the question again");
 Console.WriteLine("");
 
-var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
-
 // Create a chat completion service
 var builder = Kernel.CreateBuilder();
 //builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
 builder.AddOpenAIChatCompletion(
-    modelId: "phi3",
+    modelId: modelId,
     endpoint: new Uri("http://localhost:11434"),
-    apiKey: "apikey");
+    apiKey: "");
 builder.AddLocalTextEmbeddingGeneration();
 Kernel kernel = builder.Build();
 
@@ -78,7 +78,7 @@ Console.WriteLine("");
 SpectreConsoleOutput.DisplaySeparator();
 Console.WriteLine("Press Enter to continue");
 Console.ReadLine();
-SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (using semantic memory).");
+SpectreConsoleOutput.DisplayTitleH2($"Phi-4 response (using semantic memory).");
 
 // get the embeddings generator service
 var embeddingGenerator = kernel.Services.GetRequiredService<ITextEmbeddingGenerationService>();

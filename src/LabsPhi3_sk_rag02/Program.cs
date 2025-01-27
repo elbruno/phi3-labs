@@ -48,7 +48,7 @@ var questionSpanish = "Cual es el SuperHeroe favorito de Bruno?";
 var questionFrench = "Quel est le super-héros préféré de Bruno?";
 var questionEnglish1 = "Who likes Batman?";
 var questionSpanish2 = "A quien le gusta Batman?";
-var question = questionEnglish;
+var question = questionSpanish2;
 
 // intro
 SpectreConsoleOutput.DisplayTitle();
@@ -58,13 +58,14 @@ SpectreConsoleOutput.DisplayTitleH3("1st approach will be to ask the question di
 SpectreConsoleOutput.DisplayTitleH3("2nd approach will be to add facts to a semantic memory and ask the question again");
 Console.WriteLine("");
 
-var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
+//var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
+var modelPath = @"d:\phi3\models\Phi-3.5-mini-instruct-onnx-web";
 
 // Create a chat completion service
 var builder = Kernel.CreateBuilder();
 //builder.AddOnnxRuntimeGenAIChatCompletion(modelPath: modelPath);
 builder.AddOpenAIChatCompletion(
-    modelId: "phi3",
+    modelId: "phi3.5",
     endpoint: new Uri("http://localhost:11434"),
     apiKey: "apikey");
 builder.AddLocalTextEmbeddingGeneration();
@@ -76,12 +77,12 @@ SpectreConsoleOutput.DisplayTitleH2($"Phi-3 response (no memory).");
 var history = new ChatHistory();
 history.AddSystemMessage(systemMessage);
 
-history.AddUserMessage(question);
-var response = chat.GetStreamingChatMessageContentsAsync(history);
-await foreach (var result in response)
-{
-    SpectreConsoleOutput.WriteGreen(result.ToString());
-}
+//history.AddUserMessage(question);
+//var response = chat.GetStreamingChatMessageContentsAsync(history);
+//await foreach (var result in response)
+//{
+//    SpectreConsoleOutput.WriteGreen(result.ToString());
+//}
 
 // separator
 Console.WriteLine("");
