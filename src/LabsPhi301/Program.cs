@@ -24,7 +24,7 @@
 
 using Microsoft.ML.OnnxRuntimeGenAI;
 
-var modelPath = @"D:\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
+var modelPath = @"C:\src\phi3\models\Phi-3-mini-4k-instruct-onnx\cpu_and_mobile\cpu-int4-rtn-block-32";
 var model = new Model(modelPath);
 var tokenizer = new Tokenizer(model);
 
